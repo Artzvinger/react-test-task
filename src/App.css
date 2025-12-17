@@ -110,3 +110,17 @@ input[type="text"]:focus {
     padding: 15px;
   }
 }
+
+@media (max-width: 768px) {
+  input[type="text"] {
+    width: 200px;
+  }
+
+  .product-card {
+    width: 160px;
+  }
+
+  .modal-window {
+    width: 80%;
+  }
+}
