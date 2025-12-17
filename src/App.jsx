@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { products } from './products'
+import './App.css'
 
 function App() {
 	const [search, setSearch] = useState('')
 	const [selectedProduct, setSelectedProduct] = useState(null)
+	const [productsList] = useState(products)
+
 
 	useEffect(function () {
 		function handleEsc(e) {
@@ -12,7 +15,6 @@ function App() {
 			}
 		}
 		window.addEventListener('keydown', handleEsc)
-
 		return function () {
 			window.removeEventListener('keydown', handleEsc)
 		}
@@ -21,17 +23,18 @@ function App() {
 	return (
 		<div>
 			<h1>Список товаров</h1>
-			<input type='text'placeholder='Поиск товаров...' value={search} onChange={function (e) {setSearch(e.target.value)}}/>
 
+			<input type='text' placeholder='Поиск товаров...' value={search}onChange={function (e) {setSearch(e.target.value)}}/>
 			<div>
-				{products
-					.filter(function (item) {
-						return item.title.toLowerCase().includes(search.toLowerCase())
-					})
+				{productsList
+					.filter(function (item) {return item.title.toLowerCase().includes(search.toLowerCase())})
 					.map(function (item) {
 						return (
-							<div key={item.id} onClick={function () {setSelectedProduct(item)}}>
-								<img src={item.image} alt={item.title} width='150' />
+							<div
+								className='product-card'
+								key={item.id}
+								onClick={function () {setSelectedProduct(item)}}>
+								<img src={item.image} alt={item.title} width='150'/>
 								<h3>{item.title}</h3>
 								<p>Цена: {item.price} ₽</p>
 							</div>
@@ -40,9 +43,9 @@ function App() {
 			</div>
 
 			{selectedProduct && (
-				<div onClick={function () {setSelectedProduct(null)}}>
-					<div onClick={function (e) {e.stopPropagation()}}>
-						<button onClick={function () {setSelectedProduct(null)}}>X</button>
+				<div className="modal-overlay" onClick={function () {setSelectedProduct(null)}}>
+					<div className="modal-window" onClick={function (e) { e.stopPropagation()}}>
+						<button className="close-btn" onClick={function () { setSelectedProduct(null)}}>X</button>
 						<img
 							src={selectedProduct.image}
 							alt={selectedProduct.title}
@@ -51,12 +54,11 @@ function App() {
 						<h2>{selectedProduct.title}</h2>
 						<p>{selectedProduct.description}</p>
 						<p>Цена: {selectedProduct.price} ₽</p>
-						<button>Купить</button>
+						<button className='buy-btn'>Купить</button>
 					</div>
 				</div>
 			)}
 		</div>
 	)
 }
-
 export default App
