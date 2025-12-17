@@ -94,3 +94,19 @@ input[type="text"]:focus {
 .product-card:hover {
     transform: scale(1.02);
 }
+
+@media (max-width: 480px) {
+  input[type="text"] {
+    width: 180px;
+  }
+
+  .product-card {
+    width: 140px;
+    padding: 8px;
+  }
+
+  .modal-window {
+    width: 90%;
+    padding: 15px;
+  }
+}
