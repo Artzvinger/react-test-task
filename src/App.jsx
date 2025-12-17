@@ -1,21 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { products } from './products'
 
 function App() {
 	const [search, setSearch] = useState('')
 	const [selectedProduct, setSelectedProduct] = useState(null)
 
+	useEffect(function () {
+		function handleEsc(e) {
+			if (e.key === 'Escape') {
+				setSelectedProduct(null)
+			}
+		}
+		window.addEventListener('keydown', handleEsc)
+
+		return function () {
+			window.removeEventListener('keydown', handleEsc)
+		}
+	}, [])
+
 	return (
 		<div>
 			<h1>Список товаров</h1>
-			<input
-				type='text'
-				placeholder='Поиск товаров...'
-				value={search}
-				onChange={function (e) {
-					setSearch(e.target.value)
-				}}
-			/>
+			<input type='text'placeholder='Поиск товаров...' value={search} onChange={function (e) {setSearch(e.target.value)}}/>
+
 			<div>
 				{products
 					.filter(function (item) {
@@ -23,12 +30,7 @@ function App() {
 					})
 					.map(function (item) {
 						return (
-							<div
-								key={item.id}
-								onClick={function () {
-									setSelectedProduct(item)
-								}}
-							>
+							<div key={item.id} onClick={function () {setSelectedProduct(item)}}>
 								<img src={item.image} alt={item.title} width='150' />
 								<h3>{item.title}</h3>
 								<p>Цена: {item.price} ₽</p>
@@ -38,17 +40,19 @@ function App() {
 			</div>
 
 			{selectedProduct && (
-				<div onClick={function (e) {e.stopPropagation()}}>
-					<button onClick={function () {setSelectedProduct(null)}}>X</button>
-					<img
-						src={selectedProduct.image}
-						alt={selectedProduct.title}
-						width='150'
-					/>
-					<h2>{selectedProduct.title}</h2>
-					<p>{selectedProduct.description}</p>
-					<p>Цена: {selectedProduct.price} ₽</p>
-					<button>Купить</button>
+				<div onClick={function () {setSelectedProduct(null)}}>
+					<div onClick={function (e) {e.stopPropagation()}}>
+						<button onClick={function () {setSelectedProduct(null)}}>X</button>
+						<img
+							src={selectedProduct.image}
+							alt={selectedProduct.title}
+							width='150'
+						/>
+						<h2>{selectedProduct.title}</h2>
+						<p>{selectedProduct.description}</p>
+						<p>Цена: {selectedProduct.price} ₽</p>
+						<button>Купить</button>
+					</div>
 				</div>
 			)}
 		</div>
